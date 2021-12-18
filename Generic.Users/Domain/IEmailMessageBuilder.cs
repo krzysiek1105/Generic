@@ -2,7 +2,7 @@
 
 namespace Generic.Users.Domain;
 
-public interface IEmailMessageBuilder
+internal interface IEmailMessageBuilder
 {
     EmailMessage CreateWelcomeMessage(User user);
     EmailMessage CreateResetPasswordMessage(User user);

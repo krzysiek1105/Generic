@@ -5,7 +5,7 @@ using IEmailSender = Generic.Shared.Domain.IEmailSender;
 
 namespace Generic.Users.Application.Commands.CreateUser;
 
-public class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResult>
+internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IEmailSender _emailSender;

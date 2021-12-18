@@ -7,12 +7,14 @@ namespace Generic.Users.Infrastructure
     {
         public EmailMessage CreateWelcomeMessage(User user)
         {
-            return null;
+            var from = new Email("example@example.com");
+            return new EmailMessage(from, user.Email, "Welcome", "Hello!");
         }
 
         public EmailMessage CreateResetPasswordMessage(User user)
         {
-            return null;
+            var from = new Email("example@example.com");
+            return new EmailMessage(from, user.Email, "Reset password", "Hello!");
         }
     }
 }

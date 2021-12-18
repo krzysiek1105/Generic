@@ -44,7 +44,7 @@ namespace Generic.Users.Infrastructure
 
         public bool IsEmailUnused(Email email)
         {
-            return !_users.Values.Any(user => user.Email == email);
+            return _users.Values.All(user => user.Email != email);
         }
     }
 }

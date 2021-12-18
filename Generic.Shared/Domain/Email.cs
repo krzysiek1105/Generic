@@ -8,4 +8,9 @@ public class Email : ValueObject
     {
         Value = value;
     }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
 }

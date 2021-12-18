@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace Generic.Users.Domain;
 
-public class Password : ValueObject
+internal class Password : ValueObject
 {
     public string Hash { get; }
     public string Salt { get; }
@@ -15,5 +15,11 @@ public class Password : ValueObject
 
         Salt = Convert.ToBase64String(salt);
         Hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA512, 100000, 32));
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Hash;
+        yield return Salt;
     }
 }

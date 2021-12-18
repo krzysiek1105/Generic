@@ -1,6 +1,6 @@
 ﻿namespace Generic.Shared.Domain;
 
-public class EmailMessage
+public class EmailMessage : ValueObject
 {
     public EmailMessage(Email @from, Email to, string subject, string body)
     {
@@ -14,4 +14,12 @@ public class EmailMessage
     public Email To { get; }
     public string Subject { get; }
     public string Body { get; }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return From;
+        yield return To;
+        yield return Subject;
+        yield return Body;
+    }
 }
