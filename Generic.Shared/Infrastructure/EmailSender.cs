@@ -1,11 +1,10 @@
 ﻿using Generic.Shared.Domain;
 
-namespace Generic.Shared.Infrastructure
+namespace Generic.Shared.Infrastructure;
+
+internal class EmailSender : IEmailSender
 {
-    internal class EmailSender : IEmailSender
+    public void Send(EmailMessage emailMessage)
     {
-        public void Send(EmailMessage emailMessage)
-        {
-        }
     }
 }
