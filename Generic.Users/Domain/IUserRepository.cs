@@ -4,5 +4,5 @@ namespace Generic.Users.Domain;
 
 internal interface IUserRepository : ICrudRepository<User>
 {
-    bool IsEmailUnused(Email email);
+    Task<bool> IsEmailUnused(Email email);
 }

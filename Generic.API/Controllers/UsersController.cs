@@ -1,4 +1,6 @@
-﻿using Generic.Users.Application.Commands.CreateUser;
+﻿using System.Net;
+using Generic.Users.Application.Commands.CreateUser;
+using Generic.Users.Application.Queries.GetUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +18,16 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(CreateUserCommandResult), (int)HttpStatusCode.Created)]
     public async Task<IActionResult> Create(CreateUserCommandRequest createUserCommandRequest, CancellationToken cancellationToken)
     {
-        return Ok(await _mediator.Send(createUserCommandRequest, cancellationToken));
+        var createUserCommandResult = await _mediator.Send(createUserCommandRequest, cancellationToken);
+        return CreatedAtAction(nameof(Get), new { id = createUserCommandResult.Id }, createUserCommandResult);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+    {
+        return Ok(await _mediator.Send(new GetUserQueryRequest { Id = id }, cancellationToken));
     }
 }

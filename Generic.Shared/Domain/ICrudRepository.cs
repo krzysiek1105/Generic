@@ -2,10 +2,10 @@
 
 public interface ICrudRepository<T> where T : IAggregateRoot
 {
-    T Create(T entity);
-    T Get(Guid id);
-    void Update(T entity);
-    void Delete(Guid id);
-    void Delete(T entity);
-    void SaveChanges();
+    Task<T> Create(T entity);
+    Task<T?> Get(Guid id);
+    Task Update(T entity);
+    Task Delete(Guid id);
+    Task Delete(T entity);
+    Task SaveChanges();
 }

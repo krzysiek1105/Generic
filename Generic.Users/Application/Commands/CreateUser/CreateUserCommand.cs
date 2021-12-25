@@ -18,32 +18,32 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, Cre
         _emailMessageBuilder = emailMessageBuilder;
     }
 
-    public Task<CreateUserCommandResult> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
+    public async Task<CreateUserCommandResult> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
     {
         var firstName = new FirstName(request.FirstName);
         var lastName = new LastName(request.LastName);
         var email = new Email(request.Email);
         var password = new Password(request.Password);
 
-        if (!_userRepository.IsEmailUnused(email))
+        if (!await _userRepository.IsEmailUnused(email))
         {
             throw new DomainException("Email is already in use");
         }
 
         var user = new User(firstName, lastName, email, password);
 
-        _userRepository.Create(user);
-        _userRepository.SaveChanges();
+        await _userRepository.Create(user);
+        await _userRepository.SaveChanges();
 
         var welcomeMessage = _emailMessageBuilder.CreateWelcomeMessage(user);
         _emailSender.Send(welcomeMessage);
 
-        return Task.FromResult(new CreateUserCommandResult
+        return new CreateUserCommandResult
         {
             Id = user.Id,
             Email = user.Email.Value,
             FirstName = user.FirstName.Value,
             LastName = user.LastName.Value
-        });
+        };
     }
 }

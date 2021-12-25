@@ -12,39 +12,43 @@ namespace Generic.Users.Infrastructure
             _users = new Dictionary<Guid, User>();
         }
 
-        public User Create(User entity)
+        public Task<User> Create(User entity)
         {
             _users.Add(entity.Id, entity);
-            return entity;
+            return Task.FromResult(entity);
         }
 
-        public User Get(Guid id)
+        public Task<User?> Get(Guid id)
         {
-            return _users[id];
+            return _users.ContainsKey(id) ? Task.FromResult<User?>(_users[id]) : Task.FromResult<User?>(null);
         }
 
-        public void Update(User entity)
+        public Task Update(User entity)
         {
             _users[entity.Id] = entity;
+            return Task.CompletedTask;
         }
 
-        public void Delete(Guid id)
+        public Task Delete(Guid id)
         {
             _users.Remove(id);
+            return Task.CompletedTask;
         }
 
-        public void Delete(User entity)
+        public Task Delete(User entity)
         {
             _users.Remove(entity.Id);
+            return Task.CompletedTask;
         }
 
-        public void SaveChanges()
+        public Task SaveChanges()
         {
+            return Task.CompletedTask;
         }
 
-        public bool IsEmailUnused(Email email)
+        public Task<bool> IsEmailUnused(Email email)
         {
-            return _users.Values.All(user => user.Email != email);
+            return Task.FromResult(_users.Values.All(user => user.Email != email));
         }
     }
 }
