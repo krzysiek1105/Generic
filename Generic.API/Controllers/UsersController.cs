@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Generic.Categories.Application.Commands.CreateCategory;
 using Generic.Users.Application.Commands.CreateUser;
 using Generic.Users.Application.Queries.GetUser;
 using MediatR;
@@ -29,5 +30,12 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         return Ok(await _mediator.Send(new GetUserQueryRequest { Id = id }, cancellationToken));
+    }
+
+    [HttpPost("categories")]
+    public async Task<IActionResult> Create(CreateCategoryCommandRequest createCategoryCommandRequest, CancellationToken cancellationToken)
+    {
+        var createUserCommandResult = await _mediator.Send(createCategoryCommandRequest, cancellationToken);
+        return CreatedAtAction(nameof(Get), new { id = createUserCommandResult.Id }, createUserCommandResult);
     }
 }

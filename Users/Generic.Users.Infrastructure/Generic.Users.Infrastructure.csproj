@@ -16,11 +16,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generic.Shared\Generic.Shared.csproj" />
+    <ProjectReference Include="..\..\Generic.Shared\Generic.Shared.csproj" />
+    <ProjectReference Include="..\Generic.Users.Domain\Generic.Users.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.1" />
   </ItemGroup>
 

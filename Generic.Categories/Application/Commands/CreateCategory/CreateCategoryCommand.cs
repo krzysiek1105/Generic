@@ -10,10 +10,10 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
 
-    public CreateCategoryCommand(ICategoryRepository categoryRepository, IUserRepository userRepository)
+    public CreateCategoryCommand(IUserRepository userRepository, ICategoryRepository categoryRepository)
     {
-        _categoryRepository = categoryRepository;
         _userRepository = userRepository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<CreateCategoryCommandResult> Handle(CreateCategoryCommandRequest request, CancellationToken cancellationToken)
