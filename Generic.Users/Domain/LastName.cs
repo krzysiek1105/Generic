@@ -2,11 +2,11 @@
 
 namespace Generic.Users.Domain;
 
-internal class LastName : ValueObject
+public class LastName : ValueObject
 {
     public string Value { get; }
 
-    public LastName(string value)
+    internal LastName(string value)
     {
         Value = value;
     }

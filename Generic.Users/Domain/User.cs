@@ -2,7 +2,7 @@
 
 namespace Generic.Users.Domain;
 
-internal class User : Entity, IAggregateRoot
+public class User : Entity, IAggregateRoot
 {
     public FirstName FirstName { get; }
     public LastName LastName { get; }

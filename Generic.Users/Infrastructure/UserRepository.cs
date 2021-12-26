@@ -23,6 +23,11 @@ namespace Generic.Users.Infrastructure
             return _users.ContainsKey(id) ? Task.FromResult<User?>(_users[id]) : Task.FromResult<User?>(null);
         }
 
+        public Task<bool> Exists(Guid id)
+        {
+            return Task.FromResult(_users.ContainsKey(id));
+        }
+
         public Task Update(User entity)
         {
             _users[entity.Id] = entity;

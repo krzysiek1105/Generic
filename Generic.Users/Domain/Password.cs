@@ -4,12 +4,12 @@ using System.Security.Cryptography;
 
 namespace Generic.Users.Domain;
 
-internal class Password : ValueObject
+public class Password : ValueObject
 {
     public string Hash { get; }
     public string Salt { get; }
 
-    public Password(string password)
+    internal Password(string password)
     {
         var salt = RandomNumberGenerator.GetBytes(128);
 
