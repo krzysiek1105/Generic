@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Generic.Shared.Application;
+using MediatR;
 
 namespace Generic.Categories.Application.Commands.CreateCategory;
 
-public class CreateCategoryCommandRequest : IRequest<CreateCategoryCommandResult>
+public class CreateCategoryCommandRequest : IRequest<ICommandResult<CreateCategoryCommandResult>>
 {
     public Guid UserId { get; set; }
     public Guid? ParentId { get; set; }

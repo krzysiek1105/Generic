@@ -1,11 +1,11 @@
 ﻿using Generic.Categories.Domain;
-using Generic.Shared.Domain;
+using Generic.Shared.Application;
 using Generic.Users.Domain;
 using MediatR;
 
 namespace Generic.Categories.Application.Commands.CreateCategory;
 
-internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequest, CreateCategoryCommandResult>
+internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequest, ICommandResult<CreateCategoryCommandResult>>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
@@ -16,11 +16,11 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<CreateCategoryCommandResult> Handle(CreateCategoryCommandRequest request, CancellationToken cancellationToken)
+    public async Task<ICommandResult<CreateCategoryCommandResult>> Handle(CreateCategoryCommandRequest request, CancellationToken cancellationToken)
     {
         if (!await _userRepository.Exists(request.UserId))
         {
-            throw new DomainException($"User {request.UserId} does not exist");
+            return CommandResult<CreateCategoryCommandResult>.Failure($"User {request.UserId} does not exist");
         }
 
         var category = new Category(request.Name);
@@ -29,7 +29,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
             var parentCategory = await _categoryRepository.Get(request.ParentId.Value);
             if (parentCategory == null)
             {
-                throw new DomainException($"Parent category {request.ParentId} does not exist");
+                return CommandResult<CreateCategoryCommandResult>.Failure($"Parent category {request.ParentId} does not exist");
             }
 
             category.SetParentCategory(parentCategory);
@@ -38,11 +38,11 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
         await _categoryRepository.Create(category);
         await _categoryRepository.SaveChanges();
 
-        return new CreateCategoryCommandResult
+        return CommandResult<CreateCategoryCommandResult>.Success(new CreateCategoryCommandResult
         {
-            Id = category.Id,
             Name = category.Name,
+            Id = category.Id,
             ParentCategoryId = category.Parent?.Id
-        };
+        });
     }
 }

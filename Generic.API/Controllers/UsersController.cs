@@ -36,6 +36,12 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> Create(CreateCategoryCommandRequest createCategoryCommandRequest, CancellationToken cancellationToken)
     {
         var createUserCommandResult = await _mediator.Send(createCategoryCommandRequest, cancellationToken);
-        return CreatedAtAction(nameof(Get), new { id = createUserCommandResult.Id }, createUserCommandResult);
+        if (!createUserCommandResult.Successful)
+        {
+            return BadRequest(createUserCommandResult.ErrorMessages);
+        }
+
+        var result = createUserCommandResult.Result;
+        return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
     }
 }

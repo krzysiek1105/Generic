@@ -1,8 +1,6 @@
-﻿using Generic.Shared.Application;
+﻿namespace Generic.Users.Application.Commands.CreateUser;
 
-namespace Generic.Users.Application.Commands.CreateUser;
-
-public class CreateUserCommandResult : ICommandResult
+public class CreateUserCommandResult
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;

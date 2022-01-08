@@ -1,8 +1,6 @@
-﻿using Generic.Shared.Application;
+﻿namespace Generic.Categories.Application.Commands.CreateCategory;
 
-namespace Generic.Categories.Application.Commands.CreateCategory;
-
-public class CreateCategoryCommandResult : ICommandResult
+public class CreateCategoryCommandResult
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
