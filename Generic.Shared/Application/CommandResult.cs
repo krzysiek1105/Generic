@@ -49,7 +49,7 @@ public class CommandResult<T> : ICommandResult<T>
         return commandResult;
     }
 
-    public void AddErrorMessage(string key, string message)
+    private void AddErrorMessage(string key, string message)
     {
         _errorMessages.Add(key, message);
     }
