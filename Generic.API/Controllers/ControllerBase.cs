@@ -5,14 +5,14 @@ namespace Generic.API.Controllers
 {
     public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
-        public BadRequestObjectResult BadRequest<T>(ICommandResult<T> result)
+        public BadRequestObjectResult BadRequest<T>(ICommandResult<T> result, string title = "Bad request")
         {
-            foreach (var (key, message) in result.ErrorMessages)
-            {
-                ModelState.AddModelError(key, message);
-            }
+            return BadRequest(new { Title = title, Details = result.ErrorMessages });
+        }
 
-            return BadRequest(ModelState);
+        public NotFoundObjectResult NotFound<T>(ICommandResult<T> result, string title = "Not found")
+        {
+            return NotFound(new { Title = title, Details = result.ErrorMessages });
         }
     }
 }

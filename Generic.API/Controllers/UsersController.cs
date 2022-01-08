@@ -25,7 +25,7 @@ public class UsersController : ControllerBase
         var createUserCommandResult = await _mediator.Send(createUserCommandRequest, cancellationToken);
         if (!createUserCommandResult.Successful)
         {
-            return BadRequest(createUserCommandResult);
+            return BadRequest(createUserCommandResult, "Failed to create a user");
         }
 
         var result = createUserCommandResult.Result;
@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
         var getUserQueryRequest = await _mediator.Send(new GetUserQueryRequest { Id = id }, cancellationToken);
         if (!getUserQueryRequest.Successful)
         {
-            return NotFound();
+            return NotFound(getUserQueryRequest, $"User with id {id} does not exist");
         }
 
         return Ok(getUserQueryRequest.Result);
@@ -50,7 +50,7 @@ public class UsersController : ControllerBase
         var createUserCommandResult = await _mediator.Send(createCategoryCommandRequest, cancellationToken);
         if (!createUserCommandResult.Successful)
         {
-            return BadRequest(createUserCommandResult.ErrorMessages);
+            return BadRequest(createUserCommandResult, "Failed to create a category");
         }
 
         var result = createUserCommandResult.Result;
