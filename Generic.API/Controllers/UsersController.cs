@@ -23,13 +23,25 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> Create(CreateUserCommandRequest createUserCommandRequest, CancellationToken cancellationToken)
     {
         var createUserCommandResult = await _mediator.Send(createUserCommandRequest, cancellationToken);
-        return CreatedAtAction(nameof(Get), new { id = createUserCommandResult.Id }, createUserCommandResult);
+        if (!createUserCommandResult.Successful)
+        {
+            return BadRequest(createUserCommandResult);
+        }
+
+        var result = createUserCommandResult.Result;
+        return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
-        return Ok(await _mediator.Send(new GetUserQueryRequest { Id = id }, cancellationToken));
+        var getUserQueryRequest = await _mediator.Send(new GetUserQueryRequest { Id = id }, cancellationToken);
+        if (!getUserQueryRequest.Successful)
+        {
+            return NotFound();
+        }
+
+        return Ok(getUserQueryRequest.Result);
     }
 
     [HttpPost("categories")]

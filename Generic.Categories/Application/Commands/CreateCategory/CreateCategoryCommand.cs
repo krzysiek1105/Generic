@@ -20,7 +20,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
     {
         if (!await _userRepository.Exists(request.UserId))
         {
-            return CommandResult<CreateCategoryCommandResult>.Failure($"User {request.UserId} does not exist");
+            return CommandResult<CreateCategoryCommandResult>.Failure(nameof(request.UserId), $"User {request.UserId} does not exist");
         }
 
         var category = new Category(request.Name);
@@ -29,7 +29,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
             var parentCategory = await _categoryRepository.Get(request.ParentId.Value);
             if (parentCategory == null)
             {
-                return CommandResult<CreateCategoryCommandResult>.Failure($"Parent category {request.ParentId} does not exist");
+                return CommandResult<CreateCategoryCommandResult>.Failure(nameof(request.ParentId), $"Parent category {request.ParentId} does not exist");
             }
 
             category.SetParentCategory(parentCategory);

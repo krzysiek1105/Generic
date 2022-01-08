@@ -1,11 +1,12 @@
-﻿using Generic.Shared.Domain;
+﻿using Generic.Shared.Application;
+using Generic.Shared.Domain;
 using Generic.Users.Domain;
 using MediatR;
 using IEmailSender = Generic.Shared.Domain.IEmailSender;
 
 namespace Generic.Users.Application.Commands.CreateUser;
 
-internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResult>
+internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, ICommandResult<CreateUserCommandResult>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IEmailSender _emailSender;
@@ -18,7 +19,7 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, Cre
         _emailMessageBuilder = emailMessageBuilder;
     }
 
-    public async Task<CreateUserCommandResult> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
+    public async Task<ICommandResult<CreateUserCommandResult>> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
     {
         var firstName = new FirstName(request.FirstName);
         var lastName = new LastName(request.LastName);
@@ -27,7 +28,7 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, Cre
 
         if (!await _userRepository.IsEmailUnused(email))
         {
-            throw new DomainException("Email is already in use");
+            return CommandResult<CreateUserCommandResult>.Failure(nameof(User.Email), "Email is already in use");
         }
 
         var user = new User(firstName, lastName, email, password);
@@ -38,12 +39,12 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, Cre
         var welcomeMessage = _emailMessageBuilder.CreateWelcomeMessage(user);
         _emailSender.Send(welcomeMessage);
 
-        return new CreateUserCommandResult
+        return CommandResult<CreateUserCommandResult>.Success(new CreateUserCommandResult
         {
             Id = user.Id,
             Email = user.Email.Value,
             FirstName = user.FirstName.Value,
             LastName = user.LastName.Value
-        };
+        });
     }
 }
