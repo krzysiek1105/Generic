@@ -13,6 +13,8 @@ public class CommandResult<T> : ICommandResult<T>
 
     public static CommandResult<T> Success(T result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         return new CommandResult<T>
         {
             Successful = true,
