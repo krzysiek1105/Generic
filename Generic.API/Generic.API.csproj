@@ -21,7 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generic.Categories\Generic.Categories.csproj" />
+    <ProjectReference Include="..\Categories\Generic.Categories.Application\Generic.Categories.Application.csproj" />
+    <ProjectReference Include="..\Categories\Generic.Categories.Infrastructure\Generic.Categories.Infrastructure.csproj" />
     <ProjectReference Include="..\Users\Generic.Users.Application\Generic.Users.Application.csproj" />
     <ProjectReference Include="..\Users\Generic.Users.Infrastructure\Generic.Users.Infrastructure.csproj" />
   </ItemGroup>

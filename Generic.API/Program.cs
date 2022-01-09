@@ -1,4 +1,5 @@
-using Generic.Categories;
+using Generic.Categories.Application;
+using Generic.Categories.Infrastructure;
 using Generic.Shared;
 using Generic.Users.Application;
 using Generic.Users.Infrastructure;
@@ -18,7 +19,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSharedModule();
 builder.Services.AddUsersModuleInfrastructure();
 builder.Services.AddUsersModuleApplication();
-builder.Services.AddCategoriesModule();
+builder.Services.AddCategoriesModuleInfrastructure();
+builder.Services.AddCategoriesModuleApplication();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
