@@ -1,4 +1,5 @@
 ﻿using Generic.Shared.Application;
+using Generic.Shared.Application.FailureReasons;
 using Generic.Users.Domain;
 using MediatR;
 
@@ -18,10 +19,10 @@ internal class GetUserQuery : IRequestHandler<GetUserQueryRequest, ICommandResul
         var user = await _userRepository.Get(request.Id);
         if (user == null)
         {
-            return CommandResult<GetUserQueryResult>.Failure(nameof(request.Id), $"User {request.Id} does not exist");
+            return new CommandResult<GetUserQueryResult>().AddFailureReason(new UserDoesNotExist(request.Id));
         }
 
-        return CommandResult<GetUserQueryResult>.Success(new GetUserQueryResult
+        return new CommandResult<GetUserQueryResult>().SetResult(new GetUserQueryResult
         {
             Id = user.Id,
             Email = user.Email.Value,

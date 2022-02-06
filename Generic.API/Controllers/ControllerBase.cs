@@ -7,12 +7,12 @@ namespace Generic.API.Controllers
     {
         public BadRequestObjectResult BadRequest<T>(ICommandResult<T> result, string title = "Bad request")
         {
-            return BadRequest(new { Title = title, Details = result.ErrorMessages });
+            return BadRequest(new { Title = title, Details = result.FailureReasons.Select(failureReason => failureReason.Description) });
         }
 
         public NotFoundObjectResult NotFound<T>(ICommandResult<T> result, string title = "Not found")
         {
-            return NotFound(new { Title = title, Details = result.ErrorMessages });
+            return NotFound(new { Title = title, Details = result.FailureReasons.Select(failureReason => failureReason.Description) });
         }
     }
 }

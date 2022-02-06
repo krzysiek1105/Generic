@@ -1,6 +1,6 @@
-﻿using System.Security.Cryptography;
-using Generic.Shared.Domain;
+﻿using Generic.Shared.Domain;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
 
 namespace Generic.Users.Domain;
 

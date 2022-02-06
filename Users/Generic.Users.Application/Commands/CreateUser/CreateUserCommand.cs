@@ -1,5 +1,6 @@
 ﻿using Generic.Shared.Application;
 using Generic.Shared.Domain;
+using Generic.Users.Application.Commands.CreateUser.FailureReasons;
 using Generic.Users.Domain;
 using MediatR;
 using IEmailSender = Generic.Shared.Domain.IEmailSender;
@@ -28,7 +29,7 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, ICo
 
         if (!await _userRepository.IsEmailUnused(email))
         {
-            return CommandResult<CreateUserCommandResult>.Failure(nameof(User.Email), "Email is already in use");
+            return new CommandResult<CreateUserCommandResult>().AddFailureReason(new EmailAlreadyUsed(email.Value));
         }
 
         var user = new User(firstName, lastName, email, password);
@@ -39,7 +40,7 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, ICo
         var welcomeMessage = _emailMessageBuilder.CreateWelcomeMessage(user);
         _emailSender.Send(welcomeMessage);
 
-        return CommandResult<CreateUserCommandResult>.Success(new CreateUserCommandResult
+        return new CommandResult<CreateUserCommandResult>().SetResult(new CreateUserCommandResult
         {
             Id = user.Id,
             Email = user.Email.Value,

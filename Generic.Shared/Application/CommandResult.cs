@@ -4,60 +4,31 @@ namespace Generic.Shared.Application;
 
 public class CommandResult<T> : ICommandResult<T>
 {
-    private readonly IDictionary<string, string> _errorMessages;
+    private readonly IList<ICommandFailureReason> _failureReasons;
 
-    private CommandResult()
+    public CommandResult()
     {
-        _errorMessages = new Dictionary<string, string>();
+        _failureReasons = new List<ICommandFailureReason>();
     }
 
-    public static CommandResult<T> Success(T result)
+    public CommandResult<T> SetResult(T result)
     {
         ArgumentNullException.ThrowIfNull(result);
 
-        return new CommandResult<T>
-        {
-            Successful = true,
-            Result = result
-        };
+        Result = result;
+        return this;
     }
 
-    public static CommandResult<T> Failure(string key, string message)
+    public CommandResult<T> AddFailureReason(ICommandFailureReason failureReason)
     {
-        var commandResult = new CommandResult<T>
-        {
-            Successful = false,
-            Result = default
-        };
+        ArgumentNullException.ThrowIfNull(failureReason);
 
-        commandResult.AddErrorMessage(key, message);
-
-        return commandResult;
+        _failureReasons.Add(failureReason);
+        return this;
     }
 
-    public static CommandResult<T> Failure(IDictionary<string, string> errorMessages)
-    {
-        var commandResult = new CommandResult<T>
-        {
-            Successful = false,
-            Result = default
-        };
+    public bool Successful => !_failureReasons.Any();
 
-        foreach (var (key, message) in errorMessages)
-        {
-            commandResult.AddErrorMessage(key, message);
-        }
-
-        return commandResult;
-    }
-
-    private void AddErrorMessage(string key, string message)
-    {
-        _errorMessages.Add(key, message);
-    }
-
-    public bool Successful { get; init; }
-
-    public IDictionary<string, string> ErrorMessages => new ReadOnlyDictionary<string, string>(_errorMessages);
-    public T? Result { get; init; }
+    public IEnumerable<ICommandFailureReason> FailureReasons => new ReadOnlyCollection<ICommandFailureReason>(_failureReasons);
+    public T? Result { get; private set; }
 }

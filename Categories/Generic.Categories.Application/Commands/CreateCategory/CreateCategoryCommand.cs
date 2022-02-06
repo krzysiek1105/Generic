@@ -1,5 +1,7 @@
-﻿using Generic.Categories.Domain;
+﻿using Generic.Categories.Application.Commands.CreateCategory.FailureReasons;
+using Generic.Categories.Domain;
 using Generic.Shared.Application;
+using Generic.Shared.Application.FailureReasons;
 using Generic.Users.Domain;
 using MediatR;
 
@@ -20,7 +22,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
     {
         if (!await _userRepository.Exists(request.UserId))
         {
-            return CommandResult<CreateCategoryCommandResult>.Failure(nameof(request.UserId), $"User {request.UserId} does not exist");
+            return new CommandResult<CreateCategoryCommandResult>().AddFailureReason(new UserDoesNotExist(request.UserId));
         }
 
         var category = new Category(request.Name);
@@ -29,7 +31,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
             var parentCategory = await _categoryRepository.Get(request.ParentId.Value);
             if (parentCategory == null)
             {
-                return CommandResult<CreateCategoryCommandResult>.Failure(nameof(request.ParentId), $"Parent category {request.ParentId} does not exist");
+                return new CommandResult<CreateCategoryCommandResult>().AddFailureReason(new ParentCategoryDoesNotExist(request.ParentId.Value));
             }
 
             category.SetParentCategory(parentCategory);
@@ -38,7 +40,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
         await _categoryRepository.Create(category);
         await _categoryRepository.SaveChanges();
 
-        return CommandResult<CreateCategoryCommandResult>.Success(new CreateCategoryCommandResult
+        return new CommandResult<CreateCategoryCommandResult>().SetResult(new CreateCategoryCommandResult
         {
             Name = category.Name,
             Id = category.Id,

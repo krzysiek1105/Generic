@@ -3,6 +3,6 @@
 public interface ICommandResult<out T>
 {
     bool Successful { get; }
-    IDictionary<string, string> ErrorMessages { get; }
+    IEnumerable<ICommandFailureReason> FailureReasons { get; }
     T? Result { get; }
 }

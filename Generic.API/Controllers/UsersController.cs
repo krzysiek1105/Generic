@@ -1,9 +1,9 @@
-﻿using System.Net;
-using Generic.Categories.Application.Commands.CreateCategory;
+﻿using Generic.Categories.Application.Commands.CreateCategory;
 using Generic.Users.Application.Commands.CreateUser;
 using Generic.Users.Application.Queries.GetUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Generic.API.Controllers;
 
@@ -25,7 +25,7 @@ public class UsersController : ControllerBase
         var createUserCommandResult = await _mediator.Send(createUserCommandRequest, cancellationToken);
         if (!createUserCommandResult.Successful)
         {
-            return BadRequest(createUserCommandResult, "Failed to create a user");
+            return BadRequest(createUserCommandResult, "Failed to create an user");
         }
 
         var result = createUserCommandResult.Result;
