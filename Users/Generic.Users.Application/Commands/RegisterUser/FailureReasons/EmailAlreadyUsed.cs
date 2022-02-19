@@ -1,6 +1,6 @@
 ﻿using Generic.Shared.Application;
 
-namespace Generic.Users.Application.Commands.CreateUser.FailureReasons;
+namespace Generic.Users.Application.Commands.RegisterUser.FailureReasons;
 
 internal class EmailAlreadyUsed : ICommandFailureReason
 {

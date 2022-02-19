@@ -1,9 +1,9 @@
 ﻿using Generic.Shared.Application;
 using MediatR;
 
-namespace Generic.Users.Application.Commands.CreateUser;
+namespace Generic.Users.Application.Commands.RegisterUser;
 
-public class CreateUserCommandRequest : IRequest<ICommandResult<CreateUserCommandResult>>
+public class RegisterUserCommandRequest : IRequest<ICommandResult<RegisterUserCommandResult>>
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

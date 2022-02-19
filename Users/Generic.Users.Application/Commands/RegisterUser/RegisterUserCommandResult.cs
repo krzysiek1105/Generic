@@ -1,6 +1,6 @@
-﻿namespace Generic.Users.Application.Commands.CreateUser;
+﻿namespace Generic.Users.Application.Commands.RegisterUser;
 
-public class CreateUserCommandResult
+public class RegisterUserCommandResult
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = string.Empty;

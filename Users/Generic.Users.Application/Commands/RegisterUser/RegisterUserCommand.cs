@@ -1,26 +1,26 @@
 ﻿using Generic.Shared.Application;
 using Generic.Shared.Domain;
-using Generic.Users.Application.Commands.CreateUser.FailureReasons;
+using Generic.Users.Application.Commands.RegisterUser.FailureReasons;
 using Generic.Users.Domain;
 using MediatR;
 using IEmailSender = Generic.Shared.Domain.IEmailSender;
 
-namespace Generic.Users.Application.Commands.CreateUser;
+namespace Generic.Users.Application.Commands.RegisterUser;
 
-internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, ICommandResult<CreateUserCommandResult>>
+internal class RegisterUserCommand : IRequestHandler<RegisterUserCommandRequest, ICommandResult<RegisterUserCommandResult>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IEmailSender _emailSender;
     private readonly IEmailMessageBuilder _emailMessageBuilder;
 
-    public CreateUserCommand(IUserRepository userRepository, IEmailSender emailSender, IEmailMessageBuilder emailMessageBuilder)
+    public RegisterUserCommand(IUserRepository userRepository, IEmailSender emailSender, IEmailMessageBuilder emailMessageBuilder)
     {
         _userRepository = userRepository;
         _emailSender = emailSender;
         _emailMessageBuilder = emailMessageBuilder;
     }
 
-    public async Task<ICommandResult<CreateUserCommandResult>> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
+    public async Task<ICommandResult<RegisterUserCommandResult>> Handle(RegisterUserCommandRequest request, CancellationToken cancellationToken)
     {
         var firstName = new FirstName(request.FirstName);
         var lastName = new LastName(request.LastName);
@@ -29,7 +29,7 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, ICo
 
         if (!await _userRepository.IsEmailUnused(email))
         {
-            return new CommandResult<CreateUserCommandResult>().AddFailureReason(new EmailAlreadyUsed(email.Value));
+            return new CommandResult<RegisterUserCommandResult>().AddFailureReason(new EmailAlreadyUsed(email.Value));
         }
 
         var user = new User(firstName, lastName, email, password);
@@ -40,7 +40,7 @@ internal class CreateUserCommand : IRequestHandler<CreateUserCommandRequest, ICo
         var welcomeMessage = _emailMessageBuilder.CreateWelcomeMessage(user);
         _emailSender.Send(welcomeMessage);
 
-        return new CommandResult<CreateUserCommandResult>().SetResult(new CreateUserCommandResult
+        return new CommandResult<RegisterUserCommandResult>().SetResult(new RegisterUserCommandResult
         {
             Id = user.Id,
             Email = user.Email.Value,

@@ -1,5 +1,5 @@
 ﻿using Generic.Categories.Application.Commands.CreateCategory;
-using Generic.Users.Application.Commands.CreateUser;
+using Generic.Users.Application.Commands.RegisterUser;
 using Generic.Users.Application.Queries.GetUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +19,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(CreateUserCommandResult), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> Create(CreateUserCommandRequest createUserCommandRequest, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(RegisterUserCommandResult), (int)HttpStatusCode.Created)]
+    public async Task<IActionResult> Create(RegisterUserCommandRequest registerUserCommandRequest, CancellationToken cancellationToken)
     {
-        var createUserCommandResult = await _mediator.Send(createUserCommandRequest, cancellationToken);
+        var createUserCommandResult = await _mediator.Send(registerUserCommandRequest, cancellationToken);
         if (!createUserCommandResult.Successful)
         {
             return BadRequest(createUserCommandResult, "Failed to create an user");
