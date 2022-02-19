@@ -3,11 +3,10 @@ using Generic.Categories.Domain;
 using Generic.Shared.Application;
 using Generic.Shared.Application.FailureReasons;
 using Generic.Users.Domain;
-using MediatR;
 
 namespace Generic.Categories.Application.Commands.CreateCategory;
 
-internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequest, ICommandResult<CreateCategoryCommandResult>>
+internal class CreateCategoryCommand : CommandHandlerBase<CreateCategoryCommandRequest, CreateCategoryCommandResult>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
@@ -18,11 +17,11 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<ICommandResult<CreateCategoryCommandResult>> Handle(CreateCategoryCommandRequest request, CancellationToken cancellationToken)
+    public override async Task<ICommandResult<CreateCategoryCommandResult>> Handle(CreateCategoryCommandRequest request, CancellationToken cancellationToken)
     {
         if (!await _userRepository.Exists(request.UserId))
         {
-            return new CommandResult<CreateCategoryCommandResult>().AddFailureReason(new UserDoesNotExist(request.UserId));
+            return Failure(new UserDoesNotExist(request.UserId));
         }
 
         var category = new Category(request.Name);
@@ -31,7 +30,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
             var parentCategory = await _categoryRepository.Get(request.ParentId.Value);
             if (parentCategory == null)
             {
-                return new CommandResult<CreateCategoryCommandResult>().AddFailureReason(new ParentCategoryDoesNotExist(request.ParentId.Value));
+                return Failure(new ParentCategoryDoesNotExist(request.ParentId.Value));
             }
 
             category.SetParentCategory(parentCategory);
@@ -40,7 +39,7 @@ internal class CreateCategoryCommand : IRequestHandler<CreateCategoryCommandRequ
         await _categoryRepository.Create(category);
         await _categoryRepository.SaveChanges();
 
-        return new CommandResult<CreateCategoryCommandResult>().SetResult(new CreateCategoryCommandResult
+        return Success(new CreateCategoryCommandResult
         {
             Name = category.Name,
             Id = category.Id,

@@ -2,12 +2,11 @@
 using Generic.Shared.Domain;
 using Generic.Users.Application.Commands.RegisterUser.FailureReasons;
 using Generic.Users.Domain;
-using MediatR;
 using IEmailSender = Generic.Shared.Domain.IEmailSender;
 
 namespace Generic.Users.Application.Commands.RegisterUser;
 
-internal class RegisterUserCommand : IRequestHandler<RegisterUserCommandRequest, ICommandResult<RegisterUserCommandResult>>
+internal class RegisterUserCommand : CommandHandlerBase<RegisterUserCommandRequest, RegisterUserCommandResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IEmailSender _emailSender;
@@ -20,7 +19,7 @@ internal class RegisterUserCommand : IRequestHandler<RegisterUserCommandRequest,
         _emailMessageBuilder = emailMessageBuilder;
     }
 
-    public async Task<ICommandResult<RegisterUserCommandResult>> Handle(RegisterUserCommandRequest request, CancellationToken cancellationToken)
+    public override async Task<ICommandResult<RegisterUserCommandResult>> Handle(RegisterUserCommandRequest request, CancellationToken cancellationToken)
     {
         var firstName = new FirstName(request.FirstName);
         var lastName = new LastName(request.LastName);
@@ -29,7 +28,7 @@ internal class RegisterUserCommand : IRequestHandler<RegisterUserCommandRequest,
 
         if (!await _userRepository.IsEmailUnused(email))
         {
-            return new CommandResult<RegisterUserCommandResult>().AddFailureReason(new EmailAlreadyUsed(email.Value));
+            return Failure(new EmailAlreadyUsed(email.Value));
         }
 
         var user = new User(firstName, lastName, email, password);
@@ -40,7 +39,7 @@ internal class RegisterUserCommand : IRequestHandler<RegisterUserCommandRequest,
         var welcomeMessage = _emailMessageBuilder.CreateWelcomeMessage(user);
         _emailSender.Send(welcomeMessage);
 
-        return new CommandResult<RegisterUserCommandResult>().SetResult(new RegisterUserCommandResult
+        return Success(new RegisterUserCommandResult
         {
             Id = user.Id,
             Email = user.Email.Value,

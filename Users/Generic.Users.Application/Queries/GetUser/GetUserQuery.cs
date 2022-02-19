@@ -1,11 +1,10 @@
 ﻿using Generic.Shared.Application;
 using Generic.Shared.Application.FailureReasons;
 using Generic.Users.Domain;
-using MediatR;
 
 namespace Generic.Users.Application.Queries.GetUser;
 
-internal class GetUserQuery : IRequestHandler<GetUserQueryRequest, ICommandResult<GetUserQueryResult>>
+internal class GetUserQuery : CommandHandlerBase<GetUserQueryRequest, GetUserQueryResult>
 {
     private readonly IUserRepository _userRepository;
 
@@ -14,15 +13,15 @@ internal class GetUserQuery : IRequestHandler<GetUserQueryRequest, ICommandResul
         _userRepository = userRepository;
     }
 
-    public async Task<ICommandResult<GetUserQueryResult>> Handle(GetUserQueryRequest request, CancellationToken cancellationToken)
+    public override async Task<ICommandResult<GetUserQueryResult>> Handle(GetUserQueryRequest request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.Get(request.Id);
         if (user == null)
         {
-            return new CommandResult<GetUserQueryResult>().AddFailureReason(new UserDoesNotExist(request.Id));
+            return Failure(new UserDoesNotExist(request.Id));
         }
 
-        return new CommandResult<GetUserQueryResult>().SetResult(new GetUserQueryResult
+        return Success(new GetUserQueryResult
         {
             Id = user.Id,
             Email = user.Email.Value,

@@ -2,16 +2,16 @@
 
 namespace Generic.Shared.Application;
 
-public class CommandResult<T> : ICommandResult<T>
+internal class DefaultCommandResult<T> : ICommandResult<T>
 {
     private readonly IList<ICommandFailureReason> _failureReasons;
 
-    public CommandResult()
+    public DefaultCommandResult()
     {
         _failureReasons = new List<ICommandFailureReason>();
     }
 
-    public CommandResult<T> SetResult(T result)
+    public ICommandResult<T> SetResult(T result)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -19,7 +19,7 @@ public class CommandResult<T> : ICommandResult<T>
         return this;
     }
 
-    public CommandResult<T> AddFailureReason(ICommandFailureReason failureReason)
+    public ICommandResult<T> AddFailureReason(ICommandFailureReason failureReason)
     {
         ArgumentNullException.ThrowIfNull(failureReason);
 
