@@ -8,6 +8,8 @@ public class User : Entity, IAggregateRoot
     public LastName LastName { get; }
     public Email Email { get; }
     public Password Password { get; }
+    public bool IsActivated { get; private set; }
+    public Guid? ActivationToken { get; private set; }
 
     internal User(FirstName firstName, LastName lastName, Email email, Password password)
     {
@@ -15,5 +17,24 @@ public class User : Entity, IAggregateRoot
         LastName = lastName;
         Email = email;
         Password = password;
+
+        IsActivated = false;
+        ActivationToken = Guid.NewGuid();
+    }
+
+    public void Activate(Guid activationToken)
+    {
+        if (IsActivated)
+        {
+            throw new UserActivationException("User has already been activated");
+        }
+
+        if (activationToken != ActivationToken.Value)
+        {
+            throw new UserActivationException("Invalid activation token");
+        }
+
+        IsActivated = true;
+        ActivationToken = null;
     }
 }
