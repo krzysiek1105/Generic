@@ -6,7 +6,7 @@ public class FirstName : ValueObject
 {
     public string Value { get; }
 
-    internal FirstName(string value)
+    public FirstName(string value)
     {
         Value = value;
     }

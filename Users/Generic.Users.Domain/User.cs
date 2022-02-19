@@ -11,7 +11,7 @@ public class User : Entity, IAggregateRoot
     public bool IsActivated { get; private set; }
     public Guid? ActivationToken { get; private set; }
 
-    internal User(FirstName firstName, LastName lastName, Email email, Password password)
+    public User(FirstName firstName, LastName lastName, Email email, Password password)
     {
         FirstName = firstName;
         LastName = lastName;

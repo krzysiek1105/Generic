@@ -9,7 +9,7 @@ public class Password : ValueObject
     public string Hash { get; }
     public string Salt { get; }
 
-    internal Password(string password)
+    public Password(string password)
     {
         var salt = RandomNumberGenerator.GetBytes(128);
 
