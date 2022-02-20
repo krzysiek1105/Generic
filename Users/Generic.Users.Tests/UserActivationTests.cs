@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Generic.Users.Tests
 {
-    public class UserActivationTests
+    internal class UserActivationTests
     {
         [Test]
         public void Should_Activate_User()
