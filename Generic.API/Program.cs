@@ -12,6 +12,12 @@ builder.Services.AddRouting(options =>
     options.LowercaseQueryStrings = true;
 });
 
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy => policy
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin()));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -30,6 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
