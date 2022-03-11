@@ -20,15 +20,15 @@ public class UsersController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(RegisterUserCommandResult), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> Create(RegisterUserCommandRequest registerUserCommandRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> Register(RegisterUserCommandRequest registerUserCommandRequest, CancellationToken cancellationToken)
     {
-        var createUserCommandResult = await _mediator.Send(registerUserCommandRequest, cancellationToken);
-        if (!createUserCommandResult.Successful)
+        var registerUserCommandResult = await _mediator.Send(registerUserCommandRequest, cancellationToken);
+        if (!registerUserCommandResult.Successful)
         {
-            return BadRequest(createUserCommandResult, "Failed to create an user");
+            return BadRequest(registerUserCommandResult, "User registration failed");
         }
 
-        var result = createUserCommandResult.Result;
+        var result = registerUserCommandResult.Result;
         return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
     }
 
