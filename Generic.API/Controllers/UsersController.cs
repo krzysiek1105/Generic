@@ -29,7 +29,7 @@ public class UsersController : ControllerBase
         }
 
         var result = registerUserCommandResult.Result;
-        return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(Get), new { id = result!.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
@@ -54,6 +54,6 @@ public class UsersController : ControllerBase
         }
 
         var result = createUserCommandResult.Result;
-        return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(Get), new { id = result!.Id }, result);
     }
 }
