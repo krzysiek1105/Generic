@@ -12,7 +12,7 @@ namespace Generic.Users.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                var firstName = new FirstName(null);
+                var firstName = new FirstName(null!);
             });
         }
 

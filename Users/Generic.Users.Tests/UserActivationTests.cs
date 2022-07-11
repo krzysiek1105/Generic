@@ -10,7 +10,7 @@ namespace Generic.Users.Tests
         public void Should_Activate_User()
         {
             var user = Users.JohnDoe(false);
-            user.Activate(user.ActivationToken.Value);
+            user.Activate(user.ActivationToken!.Value);
 
             Assert.True(user.IsActivated);
             Assert.IsFalse(user.ActivationToken.HasValue);

@@ -10,7 +10,7 @@ namespace Generic.Users.Tests
             var user = new User(new FirstName("John"), new LastName("Doe"), new Email("john.doe@example.com"), new Password("password"));
             if (isActivated)
             {
-                user.Activate(user.ActivationToken.Value);
+                user.Activate(user.ActivationToken!.Value);
             }
 
             return user;

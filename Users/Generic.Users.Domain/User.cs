@@ -29,7 +29,7 @@ public class User : Entity, IAggregateRoot
             throw new UserActivationException("User has already been activated");
         }
 
-        if (activationToken != ActivationToken.Value)
+        if (activationToken != ActivationToken!.Value)
         {
             throw new UserActivationException("Invalid activation token");
         }
